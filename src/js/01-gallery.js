@@ -1,10 +1,9 @@
-// Add imports above this line
-import { galleryItems } from './gallery-items';
-// Change code below this line
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const galleryContainer = document.querySelector('.gallery');
-let lightboxInstance = null;
+import { galleryItems } from './gallery-items.js';
 
+// Функція для створення рядка HTML за шаблоном
 function createGalleryItemHTML(item) {
   return `
     <li class="gallery__item">
@@ -12,7 +11,6 @@ function createGalleryItemHTML(item) {
         <img
           class="gallery__image"
           src="${item.preview}"
-          data-source="${item.original}"
           alt="${item.description}"
         />
       </a>
@@ -20,49 +18,13 @@ function createGalleryItemHTML(item) {
   `;
 }
 
-function openModal(imageURL) {
-  lightboxInstance = basicLightbox.create(
-    `<img src="${imageURL}" alt="Image description">`,
-    {
-      onShow: () => {
-        // Додаємо обробник події для закриття модального вікна по натисканню клавіші Escape
-        document.addEventListener('keydown', closeOnEscape);
-      },
-      onClose: () => {
-        // Видаляємо обробник події для закриття по Escape
-        document.removeEventListener('keydown', closeOnEscape);
-      },
-    }
-  );
+// Рендер розмітки галереї
+const galleryContainer = document.querySelector('.gallery');
+const galleryItemsHTML = galleryItems.map(createGalleryItemHTML).join('');
+galleryContainer.insertAdjacentHTML('beforeend', galleryItemsHTML);
 
-  lightboxInstance.show();
-}
-
-function closeModal() {
-  if (lightboxInstance) {
-    lightboxInstance.close();
-    lightboxInstance = null;
-  }
-}
-
-function closeOnEscape(event) {
-  if (event.key === 'Escape') {
-    closeModal();
-  }
-}
-
-galleryContainer.addEventListener('click', e => {
-  e.preventDefault();
-
-  if (e.target.classList.contains('gallery__image')) {
-    const largeImageURL = e.target.dataset.source;
-    openModal(largeImageURL);
-  }
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt', // Вказати, що відображати у підпису (використовує значення атрибуту alt)
+  captionPosition: 'bottom', // Вказати позицію підпису (знизу)
+  captionsDelay: 250, // Затримка перед відображенням підпису
 });
-
-function renderGallery(galleryItems) {
-  const galleryItemsHTML = galleryItems.map(createGalleryItemHTML).join('');
-  galleryContainer.insertAdjacentHTML('beforeend', galleryItemsHTML);
-}
-
-renderGallery(galleryItems);
