@@ -1,0 +1,2 @@
+import"./assets/modulepreload-polyfill-ec808ebb.js";/* empty css                      */import{P as n,l as i}from"./assets/vendor-78be7656.js";const m=document.getElementById("vimeo-player"),e=new n(m),r=window.localStorage,t=r.getItem("videoplayer-current-time");t&&e.setCurrentTime(parseFloat(t));e.on("timeupdate",i(o=>{const a=o.seconds;r.setItem("videoplayer-current-time",a.toString())},1e3));e.play();
+//# sourceMappingURL=commonHelpers2.js.map
